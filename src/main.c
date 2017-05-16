@@ -57,14 +57,21 @@ int main(void)
 			lewe = (~PINA & 0xF0);
 			
 			if(prawe != 0)			//Je¿eli linia lest nad czterema prawymi czujnikami
+			{
 				OCR2 = MIN_SPEED;	//Wy³¹cz prawy silnik	
+			}
 			else					//W przeciwnym wypadku
+			{
 				OCR2 = MAX_SPEED;	//W³¹cz prawy silnik
-			
+			}
 			if(lewe != 0)			//Je¿eli linia lest nad czterema lewymi czujnikami
+			{
 				OCR0 = MIN_SPEED;	//Wy³¹cz lewy silnik
+			}
 			else					//W przeciwnym wypadku
+			{
 				OCR0 = MAX_SPEED;	//W³¹cz lewy silnik
+			}
 			
 			if(prawe != 0 && lewe != 0)	//Je¿eli linia jest nad prawymi i lewymi czujnikami
 			{
@@ -120,14 +127,7 @@ ISR(INT1_vect)
 {
 	if(IR_signal == true)
 	{
-		if(Engine_switch == true)
-		{
-			Engine_switch = false;
-		}
-		else
-		{
-			Engine_switch = true;
-		}
+		Engine_switch == true ? Engine_switch = false : Engine_switch = true;
 		TIMERA_sig_triger = true;
 	}
 
