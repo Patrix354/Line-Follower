@@ -16,8 +16,8 @@ TWS_RGB WS_BUFF[WS_LEN];	//Definicja bufora
 
 volatile uint8_t j;	//Zmienna dziel¹ca czêstotliwoœæ Timera
 volatile uint8_t i;	//Zmienna iteruj¹ca klatki animacji na diodach
-uint8_t prawe;	//Zmienne przechowuj¹ce stan czujników
-uint8_t lewe;	//--|--
+uint8_t right_sensors;	//Zmienne przechowuj¹ce stan czujników
+uint8_t left_sensors;	//--|--
 
 volatile _Bool Engine_switch = false;	//Zmienne odpowiadaj¹ce za odczytywany stan z pilota
 volatile _Bool IR_signal = true;		//--|--
@@ -53,10 +53,10 @@ int main(void)
     {
 		if(Engine_switch)	//Jeœli robot jest w stanie aktywnym
 		{			
-			prawe = (~PINA & 0x0F);	//Sczytaj wartoœci z czyjników do zmiennych lewe i prawe
-			lewe = (~PINA & 0xF0);
+			right_sensors = (~PINA & 0x0F);	//Sczytaj wartoœci z czyjników do zmiennych left_sensors i right_sensors
+			left_sensors = (~PINA & 0xF0);
 			
-			if(prawe != 0)			//Je¿eli linia lest nad czterema prawymi czujnikami
+			if(right_sensors != 0)			//Je¿eli linia lest nad czterema prawymi czujnikami
 			{
 				OCR2 = MIN_SPEED;	//Wy³¹cz prawy silnik	
 			}
@@ -64,7 +64,7 @@ int main(void)
 			{
 				OCR2 = MAX_SPEED;	//W³¹cz prawy silnik
 			}
-			if(lewe != 0)			//Je¿eli linia lest nad czterema lewymi czujnikami
+			if(left_sensors != 0)			//Je¿eli linia lest nad czterema lewymi czujnikami
 			{
 				OCR0 = MIN_SPEED;	//Wy³¹cz lewy silnik
 			}
@@ -73,13 +73,13 @@ int main(void)
 				OCR0 = MAX_SPEED;	//W³¹cz lewy silnik
 			}
 			
-			if(prawe != 0 && lewe != 0)	//Je¿eli linia jest nad prawymi i lewymi czujnikami
+			if(right_sensors != 0 && left_sensors != 0)	//Je¿eli linia jest nad prawymi i lewymi czujnikami
 			{
 				OCR0 = MAX_SPEED;	//W³¹cz oba silniki
 				OCR2 = MAX_SPEED;
 			}
-			prawe = 0;	//Wyzeruj bufory czujników
-			lewe = 0;
+			right_sensors = 0;	//Wyzeruj bufory czujników
+			left_sensors = 0;
 		}
 		else	//Je¿eli robot jest w stanie czuwania
 		{
@@ -125,7 +125,7 @@ void INT1_init(void)	//Za³¹czenie przerwania INT1
 //Je¿eli od ostatniego zbocza opadaj¹cego nie minê³o 250ms Timer siê resetuje
 ISR(INT1_vect)
 {
-	if(IR_signal == true)
+	if(IR_signal)
 	{
 		Engine_switch == true ? Engine_switch = false : Engine_switch = true;
 		TIMERA_sig_triger = true;
