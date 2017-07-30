@@ -16,8 +16,8 @@ typedef struct	//Struktura bufora
 
 
 void ws2812b_send(void* tab, uint16_t datlen, uint8_t pin);	//Wys³anie danych z bufora do diod
-void ws2812b_set_pixel_color(void* tab, uint16_t x, uint8_t red, uint8_t green, uint8_t blue);	//Ustawienie koloru i-tej diody w buforze
-void ws2812b_fill(void* tab, uint16_t datalen, uint8_t red, uint8_t green, uint8_t blue);	//Wype³nienie bufora diod (ca³ego)
-void ws2812b_clear(void* tab, uint16_t datalen);	//Wyczyszczenie bufora
+void ws2812b_set_pixel_color(void* tab, uint16_t x, uint8_t red, uint8_t green, uint8_t blue);	//Ustawienie koloru i-tej diody
+void ws2812b_fill(void* tab, uint16_t datalen, uint8_t red, uint8_t green, uint8_t blue);	//Funkcja do wype³nienia bufora diod
+void ws2812b_clear(void* tab, uint16_t datalen);	//Wyczyœæ bufor
 
 #endif /* WS2812B_H_ */

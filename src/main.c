@@ -14,11 +14,6 @@
 
 TWS_RGB WS_BUFF[WS_LEN];	//Definicja bufora
 
-volatile uint8_t j;	//Zmienna dziel¹ca czêstotliwoœæ Timera
-volatile uint8_t i;	//Zmienna iteruj¹ca klatki animacji na diodach
-uint8_t right_sensors;	//Zmienne przechowuj¹ce stan czujników
-uint8_t left_sensors;	//--|--
-
 volatile _Bool Engine_switch = false;	//Zmienne odpowiadaj¹ce za odczytywany stan z pilota
 volatile _Bool IR_signal = true;		//--|--
 volatile _Bool TIMERA_sig_triger = true;//Emulowany prescaler "Wy³¹czaj¹cy" Timer w algorytmie pilota
@@ -30,6 +25,9 @@ void TIM2_init(void);	//Za³¹czeniwe Timera2(PWM)
 
 int main(void)
 {
+	uint8_t right_sensors = 0;	//Zmienne przechowuj¹ce stan czujników
+	uint8_t left_sensors = 0;	//--|--
+	
 	DDRA = 0x00;	//PORTA jako wejœcie (czujniki)
 	PORTA = 0xFF;	//Podci¹gniêcie pinów z wyjœciami czujników do VCC
 	
@@ -125,9 +123,9 @@ void INT1_init(void)	//Za³¹czenie przerwania INT1
 //Je¿eli od ostatniego zbocza opadaj¹cego nie minê³o 250ms Timer siê resetuje
 ISR(INT1_vect)
 {
-	if(IR_signal)
+	if(IR_signal == true)
 	{
-		Engine_switch == true ? Engine_switch = false : Engine_switch = true;
+		Engine_switch == true ? Engine_switch = false : true;
 		TIMERA_sig_triger = true;
 	}
 
@@ -141,6 +139,9 @@ ISR(INT1_vect)
 //ustawi³em czêstotliwoœæ wywo³ywania przerwania 20Hz (dla animacji) i dla odczytywania sygna³u z pilota dzielê czêstotliwoœæ do 4Hz
 ISR(TIMER1_COMPA_vect)
 {
+	static uint8_t j;	//Zmienna dziel¹ca czêstotliwoœæ Timera
+	static uint8_t i;	//Zmienna iteruj¹ca klatki animacji na diodach
+	
 	//Odczytywanie stanu z pilota. Ci¹g dalszy.
 	if (TIMERA_sig_triger && j == IR_TIMEOUT)
 	{
